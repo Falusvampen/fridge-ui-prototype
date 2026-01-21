@@ -3,7 +3,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { FridgeItem } from "../types/fridge";
 import Section from "./Section";
-import WeeklyMenu from "./WeeklyMenu";
 import styled from "styled-components";
 import DangerButton from "./DangerButton";
 import ConfirmDialog from "./ConfirmDialog";
