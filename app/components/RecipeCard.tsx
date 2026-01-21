@@ -347,9 +347,7 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
             }
           }}
         >
-          {isAdded
-            ? "✅ Öppna inköpslista"
-            : `Lägg till inköpslista${typeof missingCount === "number" && missingCount > 0 ? ` (${missingCount} saknas)` : ""}`}
+          {isAdded ? "✅ Öppna inköpslista" : "Lägg till inköpslista"}
         </PrimaryButton>
         <SecondaryButton
           onClick={() => alert("Visa recept - inte implementerat ännu")}

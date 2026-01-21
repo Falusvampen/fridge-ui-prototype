@@ -187,7 +187,7 @@ export default function FridgeList({
   }, []);
 
   useEffect(() => {
-    // Load persisted fridge state from localStorage if available, otherwise fall back to the shipped JSON in /data
+    // Prefer persisted fridge state from localStorage, otherwise use server-provided initialItems
     let mounted = true;
     try {
       const raw = localStorage.getItem("fridge:data");
@@ -195,32 +195,20 @@ export default function FridgeList({
         const parsed = JSON.parse(raw);
         if (mounted && Array.isArray(parsed)) setItems(parsed);
       } else {
-        fetch("data/fridge.json")
-          .then((r) => r.json())
-          .then((data) => {
-            if (mounted && Array.isArray(data)) setItems(data);
-          })
-          .catch(() => {})
-          .finally(() => setLoading(false));
+        // Use initialItems (injected from the server) instead of fetching the same JSON again
+        if (mounted) setItems(initialItems || []);
       }
     } catch (e) {
-      // fallback to public JSON
-      fetch("data/fridge.json")
-        .then((r) => r.json())
-        .then((data) => {
-          if (mounted && Array.isArray(data)) setItems(data);
-        })
-        .catch(() => {})
-        .finally(() => setLoading(false));
+      // If localStorage access fails, fall back to initialItems
+      if (mounted) setItems(initialItems || []);
+    } finally {
+      setLoading(false);
     }
-
-    // ensure loading is cleared if we loaded from localStorage
-    if (localStorage.getItem("fridge:data")) setLoading(false);
 
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [initialItems]);
 
   // compute daysRemaining and derive category style for presentation
   const itemsWithDays = useMemo(() => {
