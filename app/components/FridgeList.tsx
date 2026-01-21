@@ -298,9 +298,6 @@ export default function FridgeList({
           </SummaryBox>
         </SummaryGrid>
       </Section>
-
-      {/* Recipe suggestion */}
-      <WeeklyMenu />
     </div>
   );
 }

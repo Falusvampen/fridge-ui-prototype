@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import RecipeCard from "./RecipeCard";
 import styled from "styled-components";
+import Section from "./Section";
 
 type Recipe = {
   id: string;
@@ -37,10 +38,12 @@ export default function RecipeList({
   }, []);
 
   return (
-    <Grid>
-      {recipes.map((r) => (
-        <RecipeCard key={r.id} recipe={r} />
-      ))}
-    </Grid>
+    <Section title="Receptförslag">
+      <Grid>
+        {recipes.map((r) => (
+          <RecipeCard key={r.id} recipe={r} />
+        ))}
+      </Grid>
+    </Section>
   );
 }
