@@ -19,7 +19,7 @@ const STORAGE_KEY = "fridge:shoppingLists";
 
 const Card = styled.div`
   padding: 12px;
-  border: 1px solid ${(p) => p.theme.colors.gray100};
+  border: 1px solid ${(p) => p.theme?.colors?.gray100 ?? "#f3f4f6"};
   border-radius: 8px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 `;
@@ -46,18 +46,18 @@ const Header = styled.div`
 
 const Name = styled.h3`
   font-weight: 600;
-  color: ${(p) => p.theme.colors.text};
+  color: ${(p) => p.theme?.colors?.text ?? "#111827"};
   margin: 0;
 `;
 
 const Meta = styled.div`
   font-size: 12px;
-  color: ${(p) => p.theme.colors.text};
+  color: ${(p) => p.theme?.colors?.text ?? "#111827"};
 `;
 
 const IngredientsText = styled.div`
   font-size: 14px;
-  color: ${(p) => p.theme.colors.text};
+  color: ${(p) => p.theme?.colors?.text ?? "#111827"};
   margin-top: 6px;
 `;
 
@@ -68,7 +68,7 @@ const ButtonRow = styled.div`
 `;
 
 const PrimaryButton = styled.button`
-  background: ${(p) => p.theme.colors.primary};
+  background: ${(p) => p.theme?.colors?.primary ?? "#2563eb"};
   color: white;
   padding: 6px 12px;
   border: none;
@@ -77,13 +77,13 @@ const PrimaryButton = styled.button`
   cursor: pointer;
 
   &:hover {
-    background: ${(p) => p.theme.colors.primaryHover};
+    background: ${(p) => p.theme?.colors?.primaryHover ?? "#3b82f6"};
   }
 `;
 
 const SecondaryButton = styled.button`
-  background: ${(p) => p.theme.colors.gray100};
-  color: ${(p) => p.theme.colors.text};
+  background: ${(p) => p.theme?.colors?.gray100 ?? "#f3f4f6"};
+  color: ${(p) => p.theme?.colors?.text ?? "#111827"};
   padding: 6px 12px;
   border: none;
   border-radius: 6px;

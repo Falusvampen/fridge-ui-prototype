@@ -22,7 +22,7 @@ const Phone = styled.div`
   height: 812px;
   border-radius: 42px;
   background: white;
-  box-shadow: 0 30px 60px rgba(2,6,23,0.2);
+  box-shadow: 0 30px 60px rgba(2, 6, 23, 0.2);
   position: relative;
   overflow: hidden;
 `;
@@ -35,7 +35,7 @@ const Notch = styled.div`
   width: 210px;
   height: 32px;
   margin-top: -8px;
-  background: rgba(0,0,0,0.05);
+  background: rgba(0, 0, 0, 0.05);
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
   pointer-events: none;
@@ -55,7 +55,7 @@ const HomeIndicator = styled.div`
   bottom: 12px;
   width: 96px;
   height: 6px;
-  background: rgba(0,0,0,0.05);
+  background: rgba(0, 0, 0, 0.05);
   border-radius: 9999px;
   pointer-events: none;
 `;
