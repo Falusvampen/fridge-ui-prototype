@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import styled from "styled-components";
+import Section from "../components/Section";
 
 type Item = { text: string; done?: boolean };
 type List = { id: string; name: string; items: Item[]; createdAt: string };
@@ -128,107 +129,109 @@ export default function Inkopslista() {
           </Count>
         </TopBar>
 
-        <div style={{ display: "grid", gap: 12 }}>
-          {lists.length === 0 ? (
-            <Card>
-              <p style={{ margin: 0, fontWeight: 700, color: "#111827" }}>
-                Ingen inköpslista ännu — lägg till en från Innehåll.
-              </p>
-            </Card>
-          ) : (
-            lists.map((l) => {
-              const isOpen = expanded.includes(l.id);
-              return (
-                <ListCard key={l.id}>
-                  <HeaderRow
-                    role="button"
-                    tabIndex={0}
-                    aria-expanded={isOpen}
-                    onClick={() => toggleExpand(l.id)}
-                    onKeyDown={(e) => {
-                      if (
-                        e.key === "Enter" ||
-                        e.key === " " ||
-                        e.key === "Spacebar"
-                      ) {
-                        e.preventDefault();
-                        toggleExpand(l.id);
-                      }
-                    }}
-                  >
-                    <div>
-                      <div style={{ fontWeight: 700 }}>{l.name}</div>
-                      <Meta>
-                        {l.items.length} artiklar • Skapad:{" "}
-                        {new Date(l.createdAt).toLocaleDateString()}
-                      </Meta>
-                    </div>
-                    <ActionRow>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          removeList(l.id);
-                        }}
-                        style={{ color: "#dc2626", fontSize: 13 }}
-                      >
-                        Ta bort
-                      </button>
-                      <svg
-                        style={{
-                          width: 20,
-                          height: 20,
-                          transform: isOpen ? "rotate(90deg)" : undefined,
-                          transition: "transform 150ms",
-                        }}
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M6 4l6 6-6 6V4z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </ActionRow>
-                  </HeaderRow>
-
-                  {isOpen && (
-                    <div
-                      style={{
-                        padding: 16,
-                        borderTop: "1px solid #f3f4f6",
-                        background: "#f9fafb",
+        <Section title="Sparade listor">
+          <div style={{ display: "grid", gap: 12 }}>
+            {lists.length === 0 ? (
+              <Card>
+                <p style={{ margin: 0, fontWeight: 700, color: "#111827" }}>
+                  Ingen inköpslista ännu — lägg till en från Innehåll.
+                </p>
+              </Card>
+            ) : (
+              lists.map((l) => {
+                const isOpen = expanded.includes(l.id);
+                return (
+                  <ListCard key={l.id}>
+                    <HeaderRow
+                      role="button"
+                      tabIndex={0}
+                      aria-expanded={isOpen}
+                      onClick={() => toggleExpand(l.id)}
+                      onKeyDown={(e) => {
+                        if (
+                          e.key === "Enter" ||
+                          e.key === " " ||
+                          e.key === "Spacebar"
+                        ) {
+                          e.preventDefault();
+                          toggleExpand(l.id);
+                        }
                       }}
                     >
-                      <div style={{ display: "grid", gap: 8 }}>
-                        {l.items.map((it, i) => (
-                          <ItemRow key={i}>
-                            <input
-                              type="checkbox"
-                              checked={!!it.done}
-                              onChange={() => toggleItem(l.id, i)}
-                              style={{ width: 18, height: 18 }}
-                            />
-                            <span
-                              style={{
-                                textDecoration: it.done
-                                  ? "line-through"
-                                  : undefined,
-                              }}
-                            >
-                              {it.text}
-                            </span>
-                          </ItemRow>
-                        ))}
+                      <div>
+                        <div style={{ fontWeight: 700 }}>{l.name}</div>
+                        <Meta>
+                          {l.items.length} artiklar • Skapad:{" "}
+                          {new Date(l.createdAt).toLocaleDateString()}
+                        </Meta>
                       </div>
-                    </div>
-                  )}
-                </ListCard>
-              );
-            })
-          )}
-        </div>
+                      <ActionRow>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeList(l.id);
+                          }}
+                          style={{ color: "#dc2626", fontSize: 13 }}
+                        >
+                          Ta bort
+                        </button>
+                        <svg
+                          style={{
+                            width: 20,
+                            height: 20,
+                            transform: isOpen ? "rotate(90deg)" : undefined,
+                            transition: "transform 150ms",
+                          }}
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M6 4l6 6-6 6V4z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </ActionRow>
+                    </HeaderRow>
+
+                    {isOpen && (
+                      <div
+                        style={{
+                          padding: 16,
+                          borderTop: "1px solid #f3f4f6",
+                          background: "#f9fafb",
+                        }}
+                      >
+                        <div style={{ display: "grid", gap: 8 }}>
+                          {l.items.map((it, i) => (
+                            <ItemRow key={i}>
+                              <input
+                                type="checkbox"
+                                checked={!!it.done}
+                                onChange={() => toggleItem(l.id, i)}
+                                style={{ width: 18, height: 18 }}
+                              />
+                              <span
+                                style={{
+                                  textDecoration: it.done
+                                    ? "line-through"
+                                    : undefined,
+                                }}
+                              >
+                                {it.text}
+                              </span>
+                            </ItemRow>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </ListCard>
+                );
+              })
+            )}
+          </div>
+        </Section>
       </Container>
     </Page>
   );

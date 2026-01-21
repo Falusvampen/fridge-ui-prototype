@@ -1,9 +1,16 @@
 "use client";
 
+import React from "react";
 import { useRouter } from "next/navigation";
+import recipes from "../data/recipes.json";
 import styled from "styled-components";
 
-type Recipe = { id: string; name: string; ingredients: string[] };
+type Recipe = {
+  id: string;
+  name: string;
+  ingredients: string[];
+  emoji?: string;
+};
 
 function makeId() {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
@@ -66,11 +73,10 @@ const Secondary = styled.button`
 export default function RecipeSuggestion() {
   const router = useRouter();
 
-  const recipe: Recipe = {
-    id: "omelette",
-    name: "Omelett med ost",
-    ingredients: ["Ägg", "Ost", "Mjölk", "Smör"],
-  };
+  const recipe: Recipe =
+    Array.isArray(recipes) && recipes.length > 0
+      ? (recipes[0] as Recipe)
+      : { id: "none", name: "Inget recept", ingredients: [] };
 
   function addShoppingListFromRecipe() {
     const id = makeId();
@@ -96,7 +102,7 @@ export default function RecipeSuggestion() {
   return (
     <Card>
       <TopRow>
-        <Emoji>🍳</Emoji>
+        <Emoji>{recipe.emoji ?? "🍽️"}</Emoji>
         <Title>
           <Heading>{recipe.name}</Heading>
           <Meta>Förslag: {recipe.ingredients.join(", ")}</Meta>

@@ -1,42 +1,41 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import RecipeCard from "./RecipeCard";
 import styled from "styled-components";
 
-const recipes = [
-  {
-    id: "omelette",
-    name: "Omelett med ost",
-    ingredients: ["Ägg", "Ost", "Mjölk", "Smör"],
-    emoji: "🍳",
-  },
-  {
-    id: "pasta-tomat",
-    name: "Pasta med tomatsås",
-    ingredients: ["Pasta", "Tomatsås", "Ost"],
-    emoji: "🍝",
-  },
-  {
-    id: "gronsallad",
-    name: "Grönsallad med avokado",
-    ingredients: ["Sallad", "Avokado", "Tomat", "Olivolja"],
-    emoji: "🥗",
-  },
-  {
-    id: "smoothie",
-    name: "Banan-smoothie",
-    ingredients: ["Banan", "Mjölk", "Yoghurt", "Honung"],
-    emoji: "🥤",
-  },
-];
+type Recipe = {
+  id: string;
+  name: string;
+  ingredients: string[];
+  emoji?: string;
+};
 
 const Grid = styled.div`
   display: grid;
   gap: 12px;
 `;
 
-export default function RecipeList() {
+export default function RecipeList({
+  initialRecipes,
+}: {
+  initialRecipes?: Recipe[];
+}) {
+  const [recipes, setRecipes] = useState<Recipe[]>(initialRecipes || []);
+
+  useEffect(() => {
+    let mounted = true;
+    fetch("/api/recipes")
+      .then((r) => r.json())
+      .then((data) => {
+        if (mounted && Array.isArray(data)) setRecipes(data);
+      })
+      .catch(() => {});
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <Grid>
       {recipes.map((r) => (

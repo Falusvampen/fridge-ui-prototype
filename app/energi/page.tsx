@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Section from "../components/Section";
 
 const Page = styled.div`
   min-height: 100vh;
@@ -42,26 +43,23 @@ export default function Energi() {
       <Container>
         <Heading>Energi</Heading>
         <Card>
-          <div style={{ marginBottom: 12 }}>
-            <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 8 }}>
-              Energiförbrukning
-            </h2>
+          <Section title="Energiförbrukning">
             <Small>Övervaka kylskåpets energiförbrukning.</Small>
-          </div>
-          <div style={{ display: "grid", gap: 12 }}>
-            <Stat $bg="#eff6ff">
-              <div style={{ fontSize: 13 }}>Idag</div>
-              <StatValue style={{ color: "#2563eb" }}>0.8 kWh</StatValue>
-            </Stat>
-            <Stat $bg="#ecfdf5">
-              <div style={{ fontSize: 13 }}>Denna vecka</div>
-              <StatValue style={{ color: "#16a34a" }}>5.2 kWh</StatValue>
-            </Stat>
-            <Stat $bg="#f5f3ff">
-              <div style={{ fontSize: 13 }}>Denna månad</div>
-              <StatValue style={{ color: "#7c3aed" }}>21.5 kWh</StatValue>
-            </Stat>
-          </div>
+            <div style={{ display: "grid", gap: 12 }}>
+              <Stat $bg="#eff6ff">
+                <div style={{ fontSize: 13 }}>Idag</div>
+                <StatValue style={{ color: "#2563eb" }}>0.8 kWh</StatValue>
+              </Stat>
+              <Stat $bg="#ecfdf5">
+                <div style={{ fontSize: 13 }}>Denna vecka</div>
+                <StatValue style={{ color: "#16a34a" }}>5.2 kWh</StatValue>
+              </Stat>
+              <Stat $bg="#f5f3ff">
+                <div style={{ fontSize: 13 }}>Denna månad</div>
+                <StatValue style={{ color: "#7c3aed" }}>21.5 kWh</StatValue>
+              </Stat>
+            </div>
+          </Section>
         </Card>
       </Container>
     </Page>
