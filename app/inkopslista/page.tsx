@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 type Item = { text: string; done?: boolean };
 type List = { id: string; name: string; items: Item[]; createdAt: string };
@@ -8,16 +8,16 @@ type List = { id: string; name: string; items: Item[]; createdAt: string };
 const STORAGE_KEY = "fridge:shoppingLists";
 
 export default function Inkopslista() {
-  const [lists, setLists] = useState<List[]>([]);
-
-  useEffect(() => {
+  const [lists, setLists] = useState<List[]>(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setLists(JSON.parse(raw) as List[]);
+      return raw ? (JSON.parse(raw) as List[]) : [];
     } catch (e) {
       console.error("Failed to load lists", e);
+      return [];
     }
-  }, []);
+  });
+
   const [expanded, setExpanded] = useState<string[]>([]);
 
   function updateLists(updated: List[]) {
