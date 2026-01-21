@@ -187,15 +187,36 @@ export default function FridgeList({
   }, []);
 
   useEffect(() => {
-    // Sync from server on mount to ensure we have latest persisted data
+    // Load persisted fridge state from localStorage if available, otherwise fall back to the shipped JSON in /data
     let mounted = true;
-    fetch("/api/fridge")
-      .then((r) => r.json())
-      .then((data) => {
-        if (mounted && Array.isArray(data)) setItems(data);
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false));
+    try {
+      const raw = localStorage.getItem("fridge:data");
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (mounted && Array.isArray(parsed)) setItems(parsed);
+      } else {
+        fetch("/data/fridge.json")
+          .then((r) => r.json())
+          .then((data) => {
+            if (mounted && Array.isArray(data)) setItems(data);
+          })
+          .catch(() => {})
+          .finally(() => setLoading(false));
+      }
+    } catch (e) {
+      // fallback to public JSON
+      fetch("/data/fridge.json")
+        .then((r) => r.json())
+        .then((data) => {
+          if (mounted && Array.isArray(data)) setItems(data);
+        })
+        .catch(() => {})
+        .finally(() => setLoading(false));
+    }
+
+    // ensure loading is cleared if we loaded from localStorage
+    if (localStorage.getItem("fridge:data")) setLoading(false);
+
     return () => {
       mounted = false;
     };
@@ -218,11 +239,8 @@ export default function FridgeList({
 
   async function persist(newItems: FridgeItem[]) {
     try {
-      await fetch("/api/fridge", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newItems),
-      });
+      // Persist locally in the browser for the static-export friendly app
+      localStorage.setItem("fridge:data", JSON.stringify(newItems));
     } catch (e) {
       console.error(e);
     }

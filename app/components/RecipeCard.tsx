@@ -137,66 +137,83 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
 
   useEffect(() => {
     let mounted = true;
-    fetch("/api/fridge")
-      .then((r) => r.json())
-      .then((data) => {
-        if (!mounted || !Array.isArray(data)) return;
-        const fridgeNames = new Set(
-          (data as FridgeItem[]).map((f) =>
-            String(f.name).toLowerCase().trim(),
-          ),
-        );
-        const missing = recipe.ingredients.filter(
-          (ing) => !fridgeNames.has(ing.toLowerCase().trim()),
-        );
-        setMissingIngredients(missing);
-        setMissingCount(missing.length);
 
-        // Check localStorage for an existing shopping list matching this recipe (by name or items)
-        try {
-          const rawLists = localStorage.getItem(STORAGE_KEY);
-          if (rawLists) {
-            type StoredList = {
-              id?: string;
-              name?: string;
-              items?: { text: string }[];
-            };
-            const lists = JSON.parse(rawLists) as StoredList[];
-            const normalizedMissing = missing
-              .map((s) => s.toLowerCase().trim())
-              .sort()
-              .join("|");
-            const match = lists.find((l) => {
-              if (l.name === `Inköpslista: ${recipe.name}`) return true;
-              if (Array.isArray(l.items)) {
-                const itemsNorm = l.items
-                  .map((it) => String(it.text).toLowerCase().trim())
-                  .sort()
-                  .join("|");
-                return itemsNorm === normalizedMissing;
-              }
-              return false;
-            });
-            if (match) {
-              setIsAdded(true);
-              setExistingListId(match.id ?? null);
-            } else {
-              setIsAdded(false);
-              setExistingListId(null);
+    function computeFromFridgeData(data: unknown) {
+      if (!mounted || !Array.isArray(data)) return;
+      const fridgeNames = new Set(
+        (data as FridgeItem[]).map((f) => String(f.name).toLowerCase().trim()),
+      );
+      const missing = recipe.ingredients.filter(
+        (ing) => !fridgeNames.has(ing.toLowerCase().trim()),
+      );
+      setMissingIngredients(missing);
+      setMissingCount(missing.length);
+
+      // Check localStorage for an existing shopping list matching this recipe (by name or items)
+      try {
+        const rawLists = localStorage.getItem(STORAGE_KEY);
+        if (rawLists) {
+          type StoredList = {
+            id?: string;
+            name?: string;
+            items?: { text: string }[];
+          };
+          const lists = JSON.parse(rawLists) as StoredList[];
+          const normalizedMissing = missing
+            .map((s) => s.toLowerCase().trim())
+            .sort()
+            .join("|");
+          const match = lists.find((l) => {
+            if (l.name === `Inköpslista: ${recipe.name}`) return true;
+            if (Array.isArray(l.items)) {
+              const itemsNorm = l.items
+                .map((it) => String(it.text).toLowerCase().trim())
+                .sort()
+                .join("|");
+              return itemsNorm === normalizedMissing;
             }
+            return false;
+          });
+          if (match) {
+            setIsAdded(true);
+            setExistingListId(match.id ?? null);
           } else {
             setIsAdded(false);
             setExistingListId(null);
           }
-        } catch {
+        } else {
           setIsAdded(false);
           setExistingListId(null);
         }
-      })
-      .catch(() => {
-        setMissingCount(null);
-        setMissingIngredients(null);
-      });
+      } catch {
+        setIsAdded(false);
+        setExistingListId(null);
+      }
+    }
+
+    try {
+      const raw = localStorage.getItem("fridge:data");
+      if (raw) {
+        computeFromFridgeData(JSON.parse(raw));
+      } else {
+        fetch("/data/fridge.json")
+          .then((r) => r.json())
+          .then((data) => computeFromFridgeData(data))
+          .catch(() => {
+            setMissingCount(null);
+            setMissingIngredients(null);
+          });
+      }
+    } catch {
+      fetch("/data/fridge.json")
+        .then((r) => r.json())
+        .then((data) => computeFromFridgeData(data))
+        .catch(() => {
+          setMissingCount(null);
+          setMissingIngredients(null);
+        });
+    }
+
     return () => {
       mounted = false;
     };
@@ -213,16 +230,43 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
       // Use precomputed missing ingredients if available, otherwise fetch once
       let missing = missingIngredients;
       if (missing === null) {
-        const res = await fetch("/api/fridge");
-        const data = await res.json();
-        const fridgeNames = new Set(
-          (data as FridgeItem[]).map((f) =>
-            String(f.name).toLowerCase().trim(),
-          ),
-        );
-        missing = recipe.ingredients.filter(
-          (ing) => !fridgeNames.has(ing.toLowerCase().trim()),
-        );
+        // try local storage first
+        try {
+          const raw = localStorage.getItem("fridge:data");
+          if (raw) {
+            const data = JSON.parse(raw);
+            const fridgeNames = new Set(
+              (data as FridgeItem[]).map((f) =>
+                String(f.name).toLowerCase().trim(),
+              ),
+            );
+            missing = recipe.ingredients.filter(
+              (ing) => !fridgeNames.has(ing.toLowerCase().trim()),
+            );
+          } else {
+            const res = await fetch("/data/fridge.json");
+            const data = await res.json();
+            const fridgeNames = new Set(
+              (data as FridgeItem[]).map((f) =>
+                String(f.name).toLowerCase().trim(),
+              ),
+            );
+            missing = recipe.ingredients.filter(
+              (ing) => !fridgeNames.has(ing.toLowerCase().trim()),
+            );
+          }
+        } catch (e) {
+          const res = await fetch("/data/fridge.json");
+          const data = await res.json();
+          const fridgeNames = new Set(
+            (data as FridgeItem[]).map((f) =>
+              String(f.name).toLowerCase().trim(),
+            ),
+          );
+          missing = recipe.ingredients.filter(
+            (ing) => !fridgeNames.has(ing.toLowerCase().trim()),
+          );
+        }
       }
 
       if (!missing || missing.length === 0) {
