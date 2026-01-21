@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
+import styled from "styled-components";
 
 type Recipe = {
   id: string;
@@ -15,6 +16,80 @@ function makeId() {
 }
 
 const STORAGE_KEY = "fridge:shoppingLists";
+
+const Card = styled.div`
+  padding: 12px;
+  border: 1px solid ${(p) => p.theme.colors.gray100};
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+`;
+
+const TopRow = styled.div`
+  display: flex;
+  align-items: flex-start;
+`;
+
+const Emoji = styled.div`
+  font-size: 1.5rem;
+  margin-right: 12px;
+`;
+
+const TitleRow = styled.div`
+  flex: 1;
+`;
+
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const Name = styled.h3`
+  font-weight: 600;
+  color: ${(p) => p.theme.colors.text};
+  margin: 0;
+`;
+
+const Meta = styled.div`
+  font-size: 12px;
+  color: ${(p) => p.theme.colors.text};
+`;
+
+const IngredientsText = styled.div`
+  font-size: 14px;
+  color: ${(p) => p.theme.colors.text};
+  margin-top: 6px;
+`;
+
+const ButtonRow = styled.div`
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+`;
+
+const PrimaryButton = styled.button`
+  background: ${(p) => p.theme.colors.primary};
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+
+  &:hover {
+    background: ${(p) => p.theme.colors.primaryHover};
+  }
+`;
+
+const SecondaryButton = styled.button`
+  background: ${(p) => p.theme.colors.gray100};
+  color: ${(p) => p.theme.colors.text};
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+`;
 
 export default function RecipeCard({ recipe }: { recipe: Recipe }) {
   const router = useRouter();
@@ -42,36 +117,28 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
   }
 
   return (
-    <div className="p-3 border border-gray-100 rounded-md shadow-sm">
-      <div className="flex items-start">
-        <div className="text-3xl mr-3">{recipe.emoji ?? "🍽️"}</div>
-        <div className="flex-1">
-          <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-black">{recipe.name}</h3>
-            <div className="text-xs text-black">
-              {recipe.ingredients.length} ingredienser
-            </div>
-          </div>
-          <div className="text-sm text-black mt-1">
-            {recipe.ingredients.join(", ")}
-          </div>
-        </div>
-      </div>
+    <Card>
+      <TopRow>
+        <Emoji>{recipe.emoji ?? "🍽️"}</Emoji>
+        <TitleRow>
+          <Header>
+            <Name>{recipe.name}</Name>
+            <Meta>{recipe.ingredients.length} ingredienser</Meta>
+          </Header>
+          <IngredientsText>{recipe.ingredients.join(", ")}</IngredientsText>
+        </TitleRow>
+      </TopRow>
 
-      <div className="mt-3 flex space-x-2">
-        <button
-          onClick={addShoppingListFromRecipe}
-          className="bg-blue-600 text-white px-3 py-1.5 rounded text-sm hover:bg-blue-500"
-        >
+      <ButtonRow>
+        <PrimaryButton onClick={addShoppingListFromRecipe}>
           Lägg till inköpslista
-        </button>
-        <button
+        </PrimaryButton>
+        <SecondaryButton
           onClick={() => alert("Visa recept - inte implementerat ännu")}
-          className="bg-gray-100 px-3 py-1.5 rounded text-sm"
         >
           Visa recept
-        </button>
-      </div>
-    </div>
+        </SecondaryButton>
+      </ButtonRow>
+    </Card>
   );
 }

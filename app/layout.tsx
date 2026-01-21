@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import BottomNav from "./components/BottomNav";
 import PhoneFrame from "./components/PhoneFrame";
+import StyledProviders from "./providers/StyledProviders";
 
 export const metadata: Metadata = {
   title: "Fridge UI Prototype",
@@ -22,7 +22,9 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        <PhoneFrame>{children}</PhoneFrame>
+        <StyledProviders>
+          <PhoneFrame>{children}</PhoneFrame>
+        </StyledProviders>
       </body>
     </html>
   );
