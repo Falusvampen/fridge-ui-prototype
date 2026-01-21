@@ -35,3 +35,41 @@ body {
     background: linear-gradient(180deg, #f3f4f6 0%, #eef2ff 100%);
   }
 }
+
+/* Subtle thin scrollbar that preserves scrolling (light and dark variants) */
+html,
+body {
+  /* Firefox: thin scrollbar and subtle thumb */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+/* WebKit browsers */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+  background: transparent;
+}
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.12);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Dark mode: slightly lighter thumb for contrast */
+@media (prefers-color-scheme: dark) {
+  html,
+  body {
+    scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+  }
+  html::-webkit-scrollbar-thumb,
+  body::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.14);
+  }
+}
