@@ -196,7 +196,7 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
       if (raw) {
         computeFromFridgeData(JSON.parse(raw));
       } else {
-        fetch("/data/fridge.json")
+        fetch("data/fridge.json")
           .then((r) => r.json())
           .then((data) => computeFromFridgeData(data))
           .catch(() => {
@@ -205,7 +205,7 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
           });
       }
     } catch {
-      fetch("/data/fridge.json")
+      fetch("data/fridge.json")
         .then((r) => r.json())
         .then((data) => computeFromFridgeData(data))
         .catch(() => {
@@ -244,7 +244,7 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
               (ing) => !fridgeNames.has(ing.toLowerCase().trim()),
             );
           } else {
-            const res = await fetch("/data/fridge.json");
+            const res = await fetch("data/fridge.json");
             const data = await res.json();
             const fridgeNames = new Set(
               (data as FridgeItem[]).map((f) =>
@@ -256,7 +256,7 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
             );
           }
         } catch (e) {
-          const res = await fetch("/data/fridge.json");
+          const res = await fetch("data/fridge.json");
           const data = await res.json();
           const fridgeNames = new Set(
             (data as FridgeItem[]).map((f) =>

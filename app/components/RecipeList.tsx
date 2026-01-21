@@ -26,7 +26,7 @@ export default function RecipeList({
 
   useEffect(() => {
     let mounted = true;
-    fetch("/api/recipes")
+    fetch("data/recipes.json")
       .then((r) => r.json())
       .then((data) => {
         if (mounted && Array.isArray(data)) setRecipes(data);

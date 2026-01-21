@@ -195,7 +195,7 @@ export default function FridgeList({
         const parsed = JSON.parse(raw);
         if (mounted && Array.isArray(parsed)) setItems(parsed);
       } else {
-        fetch("/data/fridge.json")
+        fetch("data/fridge.json")
           .then((r) => r.json())
           .then((data) => {
             if (mounted && Array.isArray(data)) setItems(data);
@@ -205,7 +205,7 @@ export default function FridgeList({
       }
     } catch (e) {
       // fallback to public JSON
-      fetch("/data/fridge.json")
+      fetch("data/fridge.json")
         .then((r) => r.json())
         .then((data) => {
           if (mounted && Array.isArray(data)) setItems(data);
