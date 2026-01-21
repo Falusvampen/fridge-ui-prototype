@@ -22,7 +22,7 @@ export default function BottomNav({
           className={`flex flex-col items-center justify-center flex-1 h-full transition-colors ${
             isActive("/inkopslista")
               ? "text-blue-600"
-              : "text-gray-600 hover:text-blue-500"
+              : "text-black hover:text-blue-500"
           }`}
         >
           <svg
@@ -44,9 +44,7 @@ export default function BottomNav({
         <Link
           href="/"
           className={`flex flex-col items-center justify-center flex-1 h-full transition-colors ${
-            isActive("/")
-              ? "text-blue-600"
-              : "text-gray-600 hover:text-blue-500"
+            isActive("/") ? "text-blue-600" : "text-black hover:text-blue-500"
           }`}
         >
           <svg
@@ -70,7 +68,7 @@ export default function BottomNav({
           className={`flex flex-col items-center justify-center flex-1 h-full transition-colors ${
             isActive("/energi")
               ? "text-blue-600"
-              : "text-gray-600 hover:text-blue-500"
+              : "text-black hover:text-blue-500"
           }`}
         >
           <svg
