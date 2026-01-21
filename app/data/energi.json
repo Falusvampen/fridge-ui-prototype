@@ -1,0 +1,38 @@
+{
+  "daily": [1.0, 0.95, 0.9, 0.85, 0.8, 0.78, 0.75],
+  "prevWeekTotal": 6.4,
+  "goal": 6.0,
+  "streak": 3,
+  "kWhPerMinuteDoorOpen": 0.02,
+  "normalAvgCount": 12,
+  "normalAvgDuration": 40,
+  "dailyOpenCounts": [12, 11, 10, 9, 8, 7, 6],
+  "dailyOpenMinutes": [45, 42, 38, 35, 30, 28, 25],
+  "achievements": [
+    {
+      "id": "savvy-saver",
+      "name": "Sparsam",
+      "description": "Spara minst 5% energi jämfört med förra veckan",
+      "criteria": { "type": "weekly_pct", "threshold": 5 },
+      "emoji": "💚",
+      "unlocked": false
+    },
+
+    {
+      "id": "goal-getter",
+      "name": "Målnåare",
+      "description": "Nå veckomålet",
+      "criteria": { "type": "week_goal", "threshold": 100 },
+      "emoji": "🏆",
+      "unlocked": false
+    },
+    {
+      "id": "door-saver",
+      "name": "Dörr-sparare",
+      "description": "Håll dörren kortare än normalt och spara energi",
+      "criteria": { "type": "door_week_savings", "threshold": 0.5 },
+      "emoji": "🚪",
+      "unlocked": false
+    }
+  ]
+}

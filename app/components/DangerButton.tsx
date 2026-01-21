@@ -2,7 +2,7 @@
 
 import styled from "styled-components";
 
-const DangerButton = styled.button`
+const DangerButton = styled.button<{ $iconOnly?: boolean }>`
   background: transparent;
   color: #ef4444;
   padding: 6px 10px;

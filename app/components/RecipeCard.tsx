@@ -12,6 +12,11 @@ type Recipe = {
   emoji?: string;
 };
 
+type FridgeItem = {
+  id?: string;
+  name: string;
+};
+
 function makeId() {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 }
@@ -137,7 +142,9 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
       .then((data) => {
         if (!mounted || !Array.isArray(data)) return;
         const fridgeNames = new Set(
-          (data as any[]).map((f) => String(f.name).toLowerCase().trim()),
+          (data as FridgeItem[]).map((f) =>
+            String(f.name).toLowerCase().trim(),
+          ),
         );
         const missing = recipe.ingredients.filter(
           (ing) => !fridgeNames.has(ing.toLowerCase().trim()),
@@ -149,16 +156,21 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
         try {
           const rawLists = localStorage.getItem(STORAGE_KEY);
           if (rawLists) {
-            const lists = JSON.parse(rawLists);
+            type StoredList = {
+              id?: string;
+              name?: string;
+              items?: { text: string }[];
+            };
+            const lists = JSON.parse(rawLists) as StoredList[];
             const normalizedMissing = missing
               .map((s) => s.toLowerCase().trim())
               .sort()
               .join("|");
-            const match = (lists as any[]).find((l: any) => {
+            const match = lists.find((l) => {
               if (l.name === `Inköpslista: ${recipe.name}`) return true;
               if (Array.isArray(l.items)) {
                 const itemsNorm = l.items
-                  .map((it: any) => String(it.text).toLowerCase().trim())
+                  .map((it) => String(it.text).toLowerCase().trim())
                   .sort()
                   .join("|");
                 return itemsNorm === normalizedMissing;
@@ -176,7 +188,7 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
             setIsAdded(false);
             setExistingListId(null);
           }
-        } catch (e) {
+        } catch {
           setIsAdded(false);
           setExistingListId(null);
         }
@@ -188,7 +200,7 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
     return () => {
       mounted = false;
     };
-  }, [recipe.ingredients]);
+  }, [recipe.ingredients, recipe.name]);
 
   async function addShoppingListFromRecipe() {
     try {
@@ -204,7 +216,9 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
         const res = await fetch("/api/fridge");
         const data = await res.json();
         const fridgeNames = new Set(
-          (data as any[]).map((f) => String(f.name).toLowerCase().trim()),
+          (data as FridgeItem[]).map((f) =>
+            String(f.name).toLowerCase().trim(),
+          ),
         );
         missing = recipe.ingredients.filter(
           (ing) => !fridgeNames.has(ing.toLowerCase().trim()),

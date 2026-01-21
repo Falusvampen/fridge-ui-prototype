@@ -5,7 +5,6 @@ import styled from "styled-components";
 import Section from "../components/Section";
 import DangerButton from "../components/DangerButton";
 import ConfirmDialog from "../components/ConfirmDialog";
-import Tooltip from "../components/Tooltip";
 
 type Item = { text: string; done?: boolean };
 type List = { id: string; name: string; items: Item[]; createdAt: string };
