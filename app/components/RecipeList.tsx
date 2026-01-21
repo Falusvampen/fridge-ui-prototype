@@ -2,6 +2,7 @@
 
 import React from "react";
 import RecipeCard from "./RecipeCard";
+import styled from "styled-components";
 
 const recipes = [
   {
@@ -30,12 +31,17 @@ const recipes = [
   },
 ];
 
+const Grid = styled.div`
+  display: grid;
+  gap: 12px;
+`;
+
 export default function RecipeList() {
   return (
-    <div className="grid gap-3">
+    <Grid>
       {recipes.map((r) => (
         <RecipeCard key={r.id} recipe={r} />
       ))}
-    </div>
+    </Grid>
   );
 }
