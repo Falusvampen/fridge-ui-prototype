@@ -3,6 +3,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Section from "../components/Section";
+import DangerButton from "../components/DangerButton";
+import ConfirmDialog from "../components/ConfirmDialog";
+import Tooltip from "../components/Tooltip";
 
 type Item = { text: string; done?: boolean };
 type List = { id: string; name: string; items: Item[]; createdAt: string };
@@ -86,6 +89,11 @@ export default function Inkopslista() {
   }, []);
 
   const [expanded, setExpanded] = useState<string[]>([]);
+  const [confirmDelete, setConfirmDelete] = useState<{
+    open: boolean;
+    id: string | null;
+    name?: string;
+  }>({ open: false, id: null });
 
   function updateLists(updated: List[]) {
     setLists(updated);
@@ -142,6 +150,29 @@ export default function Inkopslista() {
                 const isOpen = expanded.includes(l.id);
                 return (
                   <ListCard key={l.id}>
+                    {" "}
+                    {/* Confirm dialog for deleting lists */}
+                    <ConfirmDialog
+                      embedded
+                      open={confirmDelete.open && confirmDelete.id === l.id}
+                      title={
+                        confirmDelete.name
+                          ? `Radera ${confirmDelete.name}?`
+                          : "Radera lista?"
+                      }
+                      description={
+                        confirmDelete.name
+                          ? `Vill du radera inköpslistan "${confirmDelete.name}"? Detta kan inte ångras.`
+                          : undefined
+                      }
+                      onCancel={() =>
+                        setConfirmDelete({ open: false, id: null })
+                      }
+                      onConfirm={() => {
+                        if (confirmDelete.id) removeList(confirmDelete.id);
+                        setConfirmDelete({ open: false, id: null });
+                      }}
+                    />{" "}
                     <HeaderRow
                       role="button"
                       tabIndex={0}
@@ -166,15 +197,28 @@ export default function Inkopslista() {
                         </Meta>
                       </div>
                       <ActionRow>
-                        <button
+                        <DangerButton
+                          aria-label={`Radera ${l.name}`}
                           onClick={(e) => {
                             e.stopPropagation();
-                            removeList(l.id);
+                            setConfirmDelete({
+                              open: true,
+                              id: l.id,
+                              name: l.name,
+                            });
                           }}
-                          style={{ color: "#dc2626", fontSize: 13 }}
                         >
-                          Ta bort
-                        </button>
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            xmlns="http://www.w3.org/2000/svg"
+                            aria-hidden
+                          >
+                            <path d="M3 6h18v2H3V6zm2 3h14l-1.2 11.3A2 2 0 0 1 15.8 22H8.2a2 2 0 0 1-1.99-1.7L5 9zm3-5h8l1 1H7l1-1z" />
+                          </svg>
+                        </DangerButton>
                         <svg
                           style={{
                             width: 20,
@@ -194,7 +238,6 @@ export default function Inkopslista() {
                         </svg>
                       </ActionRow>
                     </HeaderRow>
-
                     {isOpen && (
                       <div
                         style={{

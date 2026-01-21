@@ -5,6 +5,9 @@ import { FridgeItem } from "../types/fridge";
 import Section from "./Section";
 import WeeklyMenu from "./WeeklyMenu";
 import styled from "styled-components";
+import DangerButton from "./DangerButton";
+import ConfirmDialog from "./ConfirmDialog";
+import Tooltip from "./Tooltip";
 
 const CATEGORY_STYLES: Record<
   string,
@@ -146,13 +149,6 @@ const Days = styled.div<{ $color: string }>`
     transform 160ms ease;
 `;
 
-const Remove = styled.button`
-  background: transparent;
-  border: none;
-  color: #ef4444;
-  cursor: pointer;
-`;
-
 const SummaryGrid = styled.div`
   display: flex;
   gap: 8px;
@@ -174,6 +170,15 @@ export default function FridgeList({
   const [items, setItems] = useState<FridgeItem[]>(initialItems || []);
 
   const [loading, setLoading] = useState(true);
+
+  const [confirmState, setConfirmState] = useState<{
+    open: boolean;
+    index: number | null;
+    name?: string;
+  }>({
+    open: false,
+    index: null,
+  });
 
   const [now, setNow] = useState<number>(() => Date.now());
   useEffect(() => {
@@ -261,7 +266,30 @@ export default function FridgeList({
                         ? "Utgått"
                         : `${it.daysRemaining} dagar`}
                     </Days>
-                    <Remove onClick={() => removeItem(idx)}>Ta bort</Remove>
+                    <Tooltip text={`Radera ${it.name}`}>
+                      <DangerButton
+                        $iconOnly
+                        aria-label={`Radera ${it.name}`}
+                        onClick={() =>
+                          setConfirmState({
+                            open: true,
+                            index: idx,
+                            name: it.name,
+                          })
+                        }
+                      >
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          xmlns="http://www.w3.org/2000/svg"
+                          aria-hidden
+                        >
+                          <path d="M3 6h18v2H3V6zm2 3h14l-1.2 11.3A2 2 0 0 1 15.8 22H8.2a2 2 0 0 1-1.99-1.7L5 9zm3-5h8l1 1H7l1-1z" />
+                        </svg>
+                      </DangerButton>
+                    </Tooltip>
                   </Actions>
                 </Item>
               );
@@ -298,6 +326,26 @@ export default function FridgeList({
           </SummaryBox>
         </SummaryGrid>
       </Section>
+
+      <ConfirmDialog
+        embedded
+        open={confirmState.open}
+        title={
+          confirmState.name ? `Radera ${confirmState.name}?` : "Radera produkt?"
+        }
+        description={
+          confirmState.name
+            ? `Vill du radera ${confirmState.name}? Detta går inte att ångra.`
+            : undefined
+        }
+        onCancel={() => setConfirmState({ open: false, index: null })}
+        onConfirm={() => {
+          if (confirmState.index !== null) {
+            removeItem(confirmState.index);
+          }
+          setConfirmState({ open: false, index: null });
+        }}
+      />
     </div>
   );
 }

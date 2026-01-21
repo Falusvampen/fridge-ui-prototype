@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
+import Tooltip, { Badge as TooltipBadge } from "./Tooltip";
 
 type Recipe = {
   id: string;
@@ -67,49 +68,170 @@ const ButtonRow = styled.div`
   gap: 8px;
 `;
 
-const PrimaryButton = styled.button`
-  background: ${(p) => p.theme?.colors?.primary ?? "#2563eb"};
+const PrimaryButton = styled.button<{ $added?: boolean }>`
+  background: ${(p) =>
+    p.$added ? "#16a34a" : (p.theme?.colors?.primary ?? "#2563eb")};
   color: white;
-  padding: 6px 12px;
+  padding: 8px 14px;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
   font-size: 13px;
+  font-weight: 700;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.12);
+  transition:
+    transform 120ms ease,
+    box-shadow 120ms ease,
+    background 120ms ease;
 
   &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(37, 99, 235, 0.12);
     background: ${(p) => p.theme?.colors?.primaryHover ?? "#3b82f6"};
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
   }
 `;
 
 const SecondaryButton = styled.button`
-  background: ${(p) => p.theme?.colors?.gray100 ?? "#f3f4f6"};
+  background: transparent;
   color: ${(p) => p.theme?.colors?.text ?? "#111827"};
-  padding: 6px 12px;
-  border: none;
-  border-radius: 6px;
+  padding: 8px 12px;
+  border: 1px solid ${(p) => p.theme?.colors?.gray100 ?? "#e5e7eb"};
+  border-radius: 10px;
   font-size: 13px;
   cursor: pointer;
+  transition:
+    background 120ms ease,
+    transform 120ms ease,
+    border-color 120ms ease;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.04);
+    transform: translateY(-1px);
+  }
 `;
 
 export default function RecipeCard({ recipe }: { recipe: Recipe }) {
   const router = useRouter();
 
-  function addShoppingListFromRecipe() {
-    const id = makeId();
-    const list = {
-      id,
-      name: `Inköpslista: ${recipe.name}`,
-      items: recipe.ingredients.map((i) => ({ text: i, done: false })),
-      createdAt: new Date().toISOString(),
-    };
+  const [missingCount, setMissingCount] = useState<number | null>(null);
+  const [missingIngredients, setMissingIngredients] = useState<string[] | null>(
+    null,
+  );
+  const [isAdded, setIsAdded] = useState(false);
+  const [existingListId, setExistingListId] = useState<string | null>(null);
 
+  useEffect(() => {
+    let mounted = true;
+    fetch("/api/fridge")
+      .then((r) => r.json())
+      .then((data) => {
+        if (!mounted || !Array.isArray(data)) return;
+        const fridgeNames = new Set(
+          (data as any[]).map((f) => String(f.name).toLowerCase().trim()),
+        );
+        const missing = recipe.ingredients.filter(
+          (ing) => !fridgeNames.has(ing.toLowerCase().trim()),
+        );
+        setMissingIngredients(missing);
+        setMissingCount(missing.length);
+
+        // Check localStorage for an existing shopping list matching this recipe (by name or items)
+        try {
+          const rawLists = localStorage.getItem(STORAGE_KEY);
+          if (rawLists) {
+            const lists = JSON.parse(rawLists);
+            const normalizedMissing = missing
+              .map((s) => s.toLowerCase().trim())
+              .sort()
+              .join("|");
+            const match = (lists as any[]).find((l: any) => {
+              if (l.name === `Inköpslista: ${recipe.name}`) return true;
+              if (Array.isArray(l.items)) {
+                const itemsNorm = l.items
+                  .map((it: any) => String(it.text).toLowerCase().trim())
+                  .sort()
+                  .join("|");
+                return itemsNorm === normalizedMissing;
+              }
+              return false;
+            });
+            if (match) {
+              setIsAdded(true);
+              setExistingListId(match.id ?? null);
+            } else {
+              setIsAdded(false);
+              setExistingListId(null);
+            }
+          } else {
+            setIsAdded(false);
+            setExistingListId(null);
+          }
+        } catch (e) {
+          setIsAdded(false);
+          setExistingListId(null);
+        }
+      })
+      .catch(() => {
+        setMissingCount(null);
+        setMissingIngredients(null);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, [recipe.ingredients]);
+
+  async function addShoppingListFromRecipe() {
     try {
+      // If this recipe is already added, open the existing list
+      if (isAdded && existingListId) {
+        router.push(`/inkopslista?id=${existingListId}`);
+        return;
+      }
+
+      // Use precomputed missing ingredients if available, otherwise fetch once
+      let missing = missingIngredients;
+      if (missing === null) {
+        const res = await fetch("/api/fridge");
+        const data = await res.json();
+        const fridgeNames = new Set(
+          (data as any[]).map((f) => String(f.name).toLowerCase().trim()),
+        );
+        missing = recipe.ingredients.filter(
+          (ing) => !fridgeNames.has(ing.toLowerCase().trim()),
+        );
+      }
+
+      if (!missing || missing.length === 0) {
+        alert("Alla ingredienser finns redan i kylskåpet");
+        return;
+      }
+
+      const id = makeId();
+      const list = {
+        id,
+        name: `Inköpslista: ${recipe.name}`,
+        items: missing.map((i) => ({ text: i, done: false })),
+        createdAt: new Date().toISOString(),
+      };
+
       const raw = localStorage.getItem(STORAGE_KEY);
       const lists = raw ? JSON.parse(raw) : [];
       lists.unshift(list);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(lists));
 
-      router.push(`/inkopslista?id=${id}`);
+      // mark as added and store the id so the button can open it later (do not redirect automatically)
+      setIsAdded(true);
+      setExistingListId(id);
     } catch (e) {
       console.error("Failed to save shopping list", e);
       alert("Kunde inte spara inköpslistan");
@@ -123,15 +245,53 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
         <TitleRow>
           <Header>
             <Name>{recipe.name}</Name>
-            <Meta>{recipe.ingredients.length} ingredienser</Meta>
+            <Meta>
+              {recipe.ingredients.length} ingredienser
+              {typeof missingCount === "number" && (
+                <Tooltip
+                  text={
+                    missingIngredients === null
+                      ? "Uppdaterar..."
+                      : missingIngredients.length === 0
+                        ? "Inga saknade ingredienser"
+                        : missingIngredients.join(", ")
+                  }
+                  ariaLabel={
+                    Array.isArray(missingIngredients) &&
+                    missingIngredients.length > 0
+                      ? `Saknas: ${missingIngredients.join(", ")}`
+                      : undefined
+                  }
+                >
+                  <TooltipBadge
+                    $color={missingCount === 0 ? "#16a34a" : "#d97706"}
+                  >
+                    {missingCount === 0
+                      ? "Alla finns"
+                      : `${missingCount} saknas`}
+                  </TooltipBadge>
+                </Tooltip>
+              )}
+            </Meta>
           </Header>
           <IngredientsText>{recipe.ingredients.join(", ")}</IngredientsText>
         </TitleRow>
       </TopRow>
 
       <ButtonRow>
-        <PrimaryButton onClick={addShoppingListFromRecipe}>
-          Lägg till inköpslista
+        <PrimaryButton
+          $added={isAdded}
+          onClick={() => {
+            if (isAdded && existingListId) {
+              router.push(`/inkopslista?id=${existingListId}`);
+            } else {
+              addShoppingListFromRecipe();
+            }
+          }}
+        >
+          {isAdded
+            ? "✅ Öppna inköpslista"
+            : `Lägg till inköpslista${typeof missingCount === "number" && missingCount > 0 ? ` (${missingCount} saknas)` : ""}`}
         </PrimaryButton>
         <SecondaryButton
           onClick={() => alert("Visa recept - inte implementerat ännu")}

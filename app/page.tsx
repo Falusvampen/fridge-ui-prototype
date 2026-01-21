@@ -26,7 +26,7 @@ export default function Home() {
   return (
     <Page>
       <Container>
-        <Heading>Innehåll</Heading>
+        <Heading>Hem</Heading>
 
         <FridgeList initialItems={fridgeData as FridgeItem[]} />
 
