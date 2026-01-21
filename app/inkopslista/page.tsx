@@ -131,7 +131,7 @@ export default function Inkopslista() {
     <Page>
       <Container>
         <TopBar>
-          <Title>Inköpslista</Title>
+          <Title>Inköpslist{lists.length !== 1 ? "or" : "a"}</Title>
           <Count>
             {lists.length} list{lists.length !== 1 ? "or" : "a"}
           </Count>
