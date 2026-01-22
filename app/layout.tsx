@@ -1,31 +1,20 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import "./globals.css";
-import PhoneFrame from "./components/PhoneFrame";
+import ResponsivePhoneFrame from "./components/ResponsivePhoneFrame";
 import StyledProviders from "./providers/StyledProviders";
 import StyledComponentsRegistry from "./providers/StyledComponentsRegistry";
 import styled from "styled-components";
-import BottomNav from "./components/BottomNav";
 
 export const metadata: Metadata = {
   title: "Fridge UI Prototype",
   description: "A prototype app for managing your fridge",
 };
-const EmbeddedNavWrap = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-`;
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const ua = (await headers()).get("user-agent") ?? "";
-  const isPhone =
-    /(iphone|ipod|android.+mobile|iemobile|opera mini|mobile)/i.test(ua);
   return (
     <html lang="sv">
       <head>
@@ -37,20 +26,7 @@ export default async function RootLayout({
       <body className="antialiased">
         <StyledComponentsRegistry>
           <StyledProviders>
-            {/* On phones we skip the phone mock and render children directly with a fixed BottomNav. */}
-            {isPhone ? (
-              <>
-                {children}
-                <BottomNav />
-              </>
-            ) : (
-              <PhoneFrame>
-                {children}
-                <EmbeddedNavWrap>
-                  <BottomNav isEmbedded />
-                </EmbeddedNavWrap>
-              </PhoneFrame>
-            )}
+            <ResponsivePhoneFrame>{children}</ResponsivePhoneFrame>
           </StyledProviders>
         </StyledComponentsRegistry>
       </body>
