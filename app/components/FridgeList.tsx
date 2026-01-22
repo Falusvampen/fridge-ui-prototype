@@ -198,8 +198,9 @@ export default function FridgeList({
         // Use initialItems (injected from the server) instead of fetching the same JSON again
         if (mounted) setItems(initialItems || []);
       }
-    } catch (e) {
+    } catch (err) {
       // If localStorage access fails, fall back to initialItems
+      console.error(err);
       if (mounted) setItems(initialItems || []);
     } finally {
       setLoading(false);

@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
+    "type-check": "tsc --noEmit",
+    "ci:check": "npm run lint && npm run type-check && npm run build"
   },
   "dependencies": {
     "next": "16.1.4",
@@ -19,7 +21,6 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@types/styled-components": "^5.1.36",
     "eslint": "^9",
     "eslint-config-next": "16.1.4",
     "tailwindcss": "^4",
