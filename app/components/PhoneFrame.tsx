@@ -78,9 +78,9 @@ export default function PhoneFrame({ children }: Props) {
         <Notch />
         <Screen>{children}</Screen>
         <HomeIndicator />
-        <EmbeddedNavWrap>
+        {/* <EmbeddedNavWrap>
           <BottomNav isEmbedded />
-        </EmbeddedNavWrap>
+        </EmbeddedNavWrap> */}
       </Phone>
     </Outer>
   );
