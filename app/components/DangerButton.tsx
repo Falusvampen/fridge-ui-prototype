@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 const DangerButton = styled.button<{ $iconOnly?: boolean }>`
   background: transparent;
-  color: #ef4444;
+  color: var(--color-danger, #ef4444);
   padding: 6px 10px;
   border: 1px solid transparent;
   border-radius: 8px;
@@ -18,7 +18,7 @@ const DangerButton = styled.button<{ $iconOnly?: boolean }>`
 
   &:hover {
     background: rgba(239, 68, 68, 0.08);
-    color: #b91c1c;
+    color: var(--color-danger-dark, #b91c1c);
     transform: translateY(-1px);
     border-color: rgba(239, 68, 68, 0.12);
   }

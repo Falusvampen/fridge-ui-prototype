@@ -11,7 +11,9 @@ const Grid = styled.div`
 `;
 const Item = styled.button<{ $unlocked?: boolean }>`
   background: ${(p) =>
-    p.$unlocked ? "linear-gradient(135deg,#ecfccb,#bbf7d0)" : "#f3f4f6"};
+    p.$unlocked
+      ? "linear-gradient(135deg,var(--color-success-light, #ecfccb),var(--color-success, #bbf7d0))"
+      : "var(--color-gray-200, #f3f4f6)"};
   border-radius: 10px;
   padding: 10px;
   text-align: center;

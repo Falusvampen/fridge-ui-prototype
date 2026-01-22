@@ -16,16 +16,18 @@ const Column = styled.div`
 `;
 const Label = styled.div`
   font-size: 13px;
-  color: ${(p) => p.theme?.colors?.text ?? "#6b7280"};
+  color: ${(p) => p.theme?.colors?.text ?? "var(--color-muted, #6b7280)"};
 `;
 const Value = styled.div<{ $good?: boolean }>`
   font-weight: 700;
   font-size: 18px;
-  color: ${(p) => (p.$good ? "#16a34a" : "#111827")};
+  color: ${(p) =>
+    p.$good ? "var(--color-success, #16a34a)" : "var(--color-text, #111827)"};
 `;
 const Change = styled.div<{ $good?: boolean }>`
   font-size: 13px;
-  color: ${(p) => (p.$good ? "#16a34a" : "#ef4444")};
+  color: ${(p) =>
+    p.$good ? "var(--color-success, #16a34a)" : "var(--color-danger, #ef4444)"};
 `;
 
 export default function ComparisonCard({
@@ -61,8 +63,12 @@ export default function ComparisonCard({
           data={data.length ? data : [previous, current]}
           width={120}
           height={40}
-          stroke={good ? "#16a34a" : "#ef4444"}
-          fill={good ? "rgba(16,185,129,0.08)" : "rgba(239,68,68,0.06)"}
+          stroke={
+            good
+              ? "var(--color-success, #16a34a)"
+              : "var(--color-danger, #ef4444)"
+          }
+          fill={good ? "rgba(34,197,94,0.08)" : "rgba(239,68,68,0.06)"}
         />
       </div>
     </Card>

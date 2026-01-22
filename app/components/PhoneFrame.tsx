@@ -10,7 +10,11 @@ type Props = {
 
 const Outer = styled.div`
   min-height: 100vh;
-  background: linear-gradient(180deg, #f3f4f6 0%, #eef2ff 100%);
+  background: linear-gradient(
+    180deg,
+    var(--color-gray-200, #f3f4f6) 0%,
+    var(--color-primary-50, #eef2ff) 100%
+  );
   display: flex;
   align-items: center;
   justify-content: center;

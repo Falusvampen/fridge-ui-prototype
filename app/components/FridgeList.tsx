@@ -12,10 +12,26 @@ const CATEGORY_STYLES: Record<
   string,
   { bg: string; avatarBg: string; daysColor: string }
 > = {
-  Mejeri: { bg: "#eff6ff", avatarBg: "#bfdbfe", daysColor: "#2563eb" },
-  Skafferi: { bg: "#fffbeb", avatarBg: "#fef3c7", daysColor: "#d97706" },
-  Grönsaker: { bg: "#f0fdf4", avatarBg: "#bbf7d0", daysColor: "#16a34a" },
-  Övrigt: { bg: "#ffffff", avatarBg: "#eeeeee", daysColor: "#6b7280" },
+  Mejeri: {
+    bg: "var(--color-primary-50, #eff6ff)",
+    avatarBg: "var(--color-primary-200, #bfdbfe)",
+    daysColor: "var(--color-primary, #2563eb)",
+  },
+  Skafferi: {
+    bg: "var(--color-warning-light, #fffbeb)",
+    avatarBg: "var(--color-warning-light, #fef3c7)",
+    daysColor: "var(--color-warning, #d97706)",
+  },
+  Grönsaker: {
+    bg: "var(--color-success-light, #f0fdf4)",
+    avatarBg: "var(--color-success-light, #bbf7d0)",
+    daysColor: "var(--color-success, #16a34a)",
+  },
+  Övrigt: {
+    bg: "var(--color-gray-50, #ffffff)",
+    avatarBg: "var(--color-gray-100, #eeeeee)",
+    daysColor: "var(--color-muted, #6b7280)",
+  },
 };
 
 // Helpers to interpolate colors between a fresh color and red based on days remaining
@@ -47,6 +63,7 @@ function mixColors(hexA: string, hexB: string, t: number) {
 
 function getExpiryColor(daysRemaining: number) {
   // three-way endpoints for better visual cue: green -> yellow -> red
+  // Use concrete hex fallbacks here so the JS mixer (hex -> rgb -> hex) can work
   const red = "#b91c1c"; // richer red
   const yellow = "#dfd43b"; // amber/yellow
   const green = "#22c55e"; // brighter green
@@ -312,20 +329,47 @@ export default function FridgeList({
             : `${expiringSoon} produkter utgår snart.`}
         </p>
         <SummaryGrid>
-          <SummaryBox $bg="#dcfce7" $color="#16a34a">
-            <div style={{ fontSize: 20, fontWeight: 700, color: "#16a34a" }}>
+          <SummaryBox
+            $bg="var(--color-success-light, #dcfce7)"
+            $color="var(--color-success, #16a34a)"
+          >
+            <div
+              style={{
+                fontSize: 20,
+                fontWeight: 700,
+                color: "var(--color-success, #16a34a)",
+              }}
+            >
               {fresh}
             </div>
             <div style={{ fontSize: 12 }}>Färska</div>
           </SummaryBox>
-          <SummaryBox $bg="#fffbeb" $color="#d97706">
-            <div style={{ fontSize: 20, fontWeight: 700, color: "#d97706" }}>
+          <SummaryBox
+            $bg="var(--color-warning-light, #fffbeb)"
+            $color="var(--color-warning, #d97706)"
+          >
+            <div
+              style={{
+                fontSize: 20,
+                fontWeight: 700,
+                color: "var(--color-warning, #d97706)",
+              }}
+            >
               {expiringSoon}
             </div>
             <div style={{ fontSize: 12 }}>Utgår snart</div>
           </SummaryBox>
-          <SummaryBox $bg="#fee2e2" $color="#dc2626">
-            <div style={{ fontSize: 20, fontWeight: 700, color: "#dc2626" }}>
+          <SummaryBox
+            $bg="var(--color-danger-light, #fee2e2)"
+            $color="var(--color-danger, #dc2626)"
+          >
+            <div
+              style={{
+                fontSize: 20,
+                fontWeight: 700,
+                color: "var(--color-danger, #dc2626)",
+              }}
+            >
               {expired}
             </div>
             <div style={{ fontSize: 12 }}>Utgångna</div>

@@ -12,7 +12,7 @@ export default function Sparkline({
   data,
   width = 240,
   height = 48,
-  stroke = "#2563eb",
+  stroke = "var(--color-primary, #2563eb)",
   fill = "rgba(37,99,235,0.08)",
 }: Props) {
   if (!data || data.length === 0) return null;

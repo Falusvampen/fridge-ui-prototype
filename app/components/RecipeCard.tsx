@@ -75,7 +75,9 @@ const ButtonRow = styled.div`
 
 const PrimaryButton = styled.button<{ $added?: boolean }>`
   background: ${(p) =>
-    p.$added ? "#16a34a" : (p.theme?.colors?.primary ?? "#2563eb")};
+    p.$added
+      ? "var(--color-success, #16a34a)"
+      : (p.theme?.colors?.primary ?? "#2563eb")};
   color: white;
   padding: 8px 14px;
   border: none;
@@ -255,7 +257,7 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
               (ing) => !fridgeNames.has(ing.toLowerCase().trim()),
             );
           }
-        } catch (e) {
+        } catch {
           const res = await fetch("data/fridge.json");
           const data = await res.json();
           const fridgeNames = new Set(
@@ -290,8 +292,8 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
       // mark as added and store the id so the button can open it later (do not redirect automatically)
       setIsAdded(true);
       setExistingListId(id);
-    } catch (e) {
-      console.error("Failed to save shopping list", e);
+    } catch (err) {
+      console.error("Failed to save shopping list", err);
       alert("Kunde inte spara inköpslistan");
     }
   }
@@ -322,7 +324,11 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
                   }
                 >
                   <TooltipBadge
-                    $color={missingCount === 0 ? "#16a34a" : "#d97706"}
+                    $color={
+                      missingCount === 0
+                        ? "var(--color-success, #16a34a)"
+                        : "var(--color-warning, #d97706)"
+                    }
                   >
                     {missingCount === 0
                       ? "Alla finns"

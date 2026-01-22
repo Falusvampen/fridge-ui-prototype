@@ -13,7 +13,7 @@ const Wrapper = styled.span`
 export const Badge = styled.span<{ $color?: string }>`
   margin-left: 8px;
   font-size: 12px;
-  color: ${(p) => p.$color || "#d97706"};
+  color: ${(p) => p.$color || "var(--color-warning, #d97706)"};
   padding: 4px 8px;
   border-radius: 9999px;
   background: rgba(0, 0, 0, 0.03);
@@ -24,7 +24,7 @@ const Text = styled.span`
   bottom: 125%;
   left: 50%;
   transform: translateX(-50%) translateY(6px);
-  background: #111827;
+  background: var(--tooltip-bg, #111827);
   color: white;
   padding: 6px 8px;
   border-radius: 6px;
@@ -46,7 +46,7 @@ const Text = styled.span`
     transform: translateX(-50%);
     border-width: 6px;
     border-style: solid;
-    border-color: #111827 transparent transparent transparent;
+    border-color: var(--tooltip-bg, #111827) transparent transparent transparent;
   }
 
   ${Wrapper}:hover &,

@@ -8,7 +8,7 @@ import Achievements from "../components/Achievements";
 
 const Page = styled.div`
   min-height: 100vh;
-  background: #f8fafc;
+  background: var(--color-gray-50, #f8fafc);
   padding: 16px 16px 80px;
 `;
 const Container = styled.div`
@@ -24,7 +24,7 @@ const Heading = styled.h1`
 
 const Small = styled.div`
   font-size: 14px;
-  color: ${(p) => p.theme?.colors?.text ?? "#6b7280"};
+  color: ${(p) => p.theme?.colors?.text ?? "var(--color-muted, #6b7280)"};
 `;
 const StatRow = styled.div`
   display: grid;
@@ -33,26 +33,30 @@ const StatRow = styled.div`
   margin-top: 12px;
 `;
 const BigStat = styled.div`
-  background: #eff6ff;
+  background: var(--color-primary-50, #eff6ff);
   border-radius: 12px;
   padding: 14px;
 `;
 const BigValue = styled.div`
   font-size: 28px;
   font-weight: 800;
-  color: #2563eb;
+  color: var(--color-primary, #2563eb);
 `;
 const Badge = styled.div`
   display: inline-block;
-  background: linear-gradient(90deg, #fef3c7, #fde68a);
-  color: #92400e;
+  background: linear-gradient(
+    90deg,
+    var(--color-warning-light, #fef3c7),
+    var(--color-warning-alt, #fde68a)
+  );
+  color: var(--color-warning-alt, #92400e);
   padding: 6px 10px;
   border-radius: 999px;
   font-weight: 700;
   font-size: 13px;
 `;
 const ProgressBar = styled.div`
-  background: #e6e6e6;
+  background: var(--color-gray-200, #e6e6e6);
   height: 10px;
   border-radius: 999px;
   overflow: hidden;
@@ -61,7 +65,11 @@ const ProgressBar = styled.div`
 const Progress = styled.div<{ $pct: number }>`
   width: ${(p) => p.$pct}%;
   height: 100%;
-  background: linear-gradient(90deg, #34d399, #10b981);
+  background: linear-gradient(
+    90deg,
+    var(--color-success, #34d399),
+    var(--color-success-alt, #10b981)
+  );
   transition: width 700ms ease;
 `;
 
@@ -136,7 +144,14 @@ export default function Energi() {
                 }}
               >
                 <div>
-                  <div style={{ fontSize: 13, color: "#6b7280" }}>Idag</div>
+                  <div
+                    style={{
+                      fontSize: 13,
+                      color: "var(--color-muted, #6b7280)",
+                    }}
+                  >
+                    Idag
+                  </div>
                   <BigValue aria-live="polite">
                     <AnimatedNumber value={today} />{" "}
                     <span style={{ fontSize: 12 }}>kWh</span>
@@ -144,7 +159,13 @@ export default function Energi() {
                 </div>
                 <div style={{ textAlign: "right" }}>
                   <Badge>Energi-hjälte ✨</Badge>
-                  <div style={{ fontSize: 12, color: "#6b7280", marginTop: 8 }}>
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: "var(--color-muted, #6b7280)",
+                      marginTop: 8,
+                    }}
+                  >
                     {weeklyImproved
                       ? `Bra jobbat! ${weeklyPct}% bättre än förra veckan`
                       : `Fortsätt — du kan spara mer!`}
@@ -159,7 +180,11 @@ export default function Energi() {
 
           <StatRow>
             <BigStat>
-              <div style={{ fontSize: 13, color: "#6b7280" }}>Denna vecka</div>
+              <div
+                style={{ fontSize: 13, color: "var(--color-muted, #6b7280)" }}
+              >
+                Denna vecka
+              </div>
               <div style={{ fontWeight: 700, fontSize: 18, marginTop: 6 }}>
                 {weekTotal} kWh
               </div>
@@ -173,14 +198,26 @@ export default function Energi() {
                 <ProgressBar>
                   <Progress $pct={pctToGoal} />
                 </ProgressBar>
-                <div style={{ fontSize: 12, color: "#6b7280", marginTop: 8 }}>
+                <div
+                  style={{
+                    fontSize: 12,
+                    color: "var(--color-muted, #6b7280)",
+                    marginTop: 8,
+                  }}
+                >
                   {pctToGoal}% av veckans mål
                 </div>
               </div>
             </BigStat>
 
-            <BigStat style={{ background: "#ecfdf5" }}>
-              <div style={{ fontSize: 13, color: "#6b7280" }}>Denna månad</div>
+            <BigStat
+              style={{ background: "var(--color-success-light, #ecfdf5)" }}
+            >
+              <div
+                style={{ fontSize: 13, color: "var(--color-muted, #6b7280)" }}
+              >
+                Denna månad
+              </div>
               <div style={{ fontWeight: 700, fontSize: 18, marginTop: 6 }}>
                 {Math.round(weekTotal * 4 * 10) / 10} kWh
               </div>
@@ -249,7 +286,9 @@ export default function Energi() {
               }}
             >
               <div>
-                <div style={{ fontSize: 13, color: "#6b7280" }}>
+                <div
+                  style={{ fontSize: 13, color: "var(--color-muted, #6b7280)" }}
+                >
                   Estimerad besparing idag
                 </div>
                 <div style={{ fontWeight: 700, fontSize: 18, marginTop: 6 }}>
@@ -275,7 +314,7 @@ export default function Energi() {
                   ).map((d) => d)}
                   width={120}
                   height={64}
-                  stroke="#f59e0b"
+                  stroke="var(--color-warning-alt, #f59e0b)"
                   fill="rgba(245,158,11,0.08)"
                 />
               </div>
@@ -310,8 +349,8 @@ export default function Energi() {
                   weeklySavingsKWh >=
                   (achievementsDef.find((a) => a.id === "door-saver")?.criteria
                     ?.threshold ?? 0)
-                    ? "linear-gradient(135deg,#ecfccb,#bbf7d0)"
-                    : "#f3f4f6",
+                    ? "linear-gradient(135deg,var(--color-success-light, #ecfccb),var(--color-success, #bbf7d0))"
+                    : "var(--color-gray-200, #f3f4f6)",
                 display: "flex",
                 flexDirection: "column",
                 gap: 6,

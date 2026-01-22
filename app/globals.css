@@ -10,20 +10,57 @@
   /* Design tokens (single source of truth) */
   --color-primary: #2563eb; /* blue-600 */
   --color-primary-hover: #3b82f6; /* blue-500 */
-  --color-gray-100: #f3f4f6;
+  --color-primary-50: #eff6ff;
+  --color-primary-200: #bfdbfe;
+
+  --color-success: #16a34a;
+  --color-success-light: #dcfce7;
+  --color-success-alt: #22c55e;
+
+  --color-warning: #d97706;
+  --color-warning-light: #fffbeb;
+  --color-warning-alt: #f59e0b;
+
+  --color-danger: #dc2626;
+  --color-danger-dark: #b91c1c;
+  --color-danger-light: #fee2e2;
+
+  --color-muted: #6b7280;
+  --color-gray-50: #f8fafc;
+  --color-gray-200: #f3f4f6;
+
   --color-text: #111827;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Background / text */
+    --background: #ffffff;
+    --foreground: #171717;
 
-    /* Dark mode tokens */
-    --color-primary: #3b82f6; /* slightly lighter in dark */
-    --color-primary-hover: #60a5fa;
-    --color-gray-100: #111827;
-    --color-text: #ededed;
+    /* Design tokens (single source of truth) */
+    --color-primary: #2563eb; /* blue-600 */
+    --color-primary-hover: #3b82f6; /* blue-500 */
+    --color-primary-50: #eff6ff;
+    --color-primary-200: #bfdbfe;
+
+    --color-success: #16a34a;
+    --color-success-light: #dcfce7;
+    --color-success-alt: #22c55e;
+
+    --color-warning: #d97706;
+    --color-warning-light: #fffbeb;
+    --color-warning-alt: #f59e0b;
+
+    --color-danger: #dc2626;
+    --color-danger-dark: #b91c1c;
+    --color-danger-light: #fee2e2;
+
+    --color-muted: #6b7280;
+    --color-gray-50: #f8fafc;
+    --color-gray-200: #f3f4f6;
+
+    --color-text: #111827;
   }
 }
 
@@ -47,7 +84,11 @@ body {
 /* Make body background slightly tinted to highlight the phone */
 @media (min-width: 640px) {
   body {
-    background: linear-gradient(180deg, #f3f4f6 0%, #eef2ff 100%);
+    background: linear-gradient(
+      180deg,
+      var(--color-gray-200, #f3f4f6) 0%,
+      var(--color-primary-50, #eef2ff) 100%
+    );
   }
 }
 

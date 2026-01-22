@@ -7,7 +7,7 @@ import RecipeList from "./components/RecipeList";
 
 const Page = styled.div`
   min-height: 100vh;
-  background: #f8fafc;
+  background: var(--color-gray-50, #f8fafc);
   padding: 16px 16px 80px;
 `;
 const Container = styled.div`

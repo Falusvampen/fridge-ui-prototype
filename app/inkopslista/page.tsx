@@ -13,7 +13,7 @@ const STORAGE_KEY = "fridge:shoppingLists";
 
 const Page = styled.div`
   min-height: 100vh;
-  background: #f8fafc;
+  background: var(--color-gray-50, #f8fafc);
   padding: 16px 16px 80px;
 `;
 const Container = styled.div`
@@ -241,8 +241,8 @@ export default function Inkopslista() {
                       <div
                         style={{
                           padding: 16,
-                          borderTop: "1px solid #f3f4f6",
-                          background: "#f9fafb",
+                          borderTop: "1px solid var(--color-gray-200, #f3f4f6)",
+                          background: "var(--color-gray-50, #f9fafb)",
                         }}
                       >
                         <div style={{ display: "grid", gap: 8 }}>
