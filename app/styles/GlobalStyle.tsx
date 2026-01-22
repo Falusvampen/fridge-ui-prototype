@@ -10,7 +10,7 @@ export const GlobalStyle = createGlobalStyle`
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     /* Prefer CSS variable (SSR-visible) with theme fallback to keep hydration consistent */
-    color: var(--color-text, ${({ theme }) => theme.colors.text});
+    color: var(--color-text, ${({ theme }) => theme?.colors?.text ?? "#111827"});
     background: var(--background);
   }
 
