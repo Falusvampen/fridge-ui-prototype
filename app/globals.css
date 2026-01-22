@@ -3,14 +3,27 @@
 @tailwind utilities;
 
 :root {
+  /* Background / text */
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Design tokens (single source of truth) */
+  --color-primary: #2563eb; /* blue-600 */
+  --color-primary-hover: #3b82f6; /* blue-500 */
+  --color-gray-100: #f3f4f6;
+  --color-text: #111827;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+
+    /* Dark mode tokens */
+    --color-primary: #3b82f6; /* slightly lighter in dark */
+    --color-primary-hover: #60a5fa;
+    --color-gray-100: #111827;
+    --color-text: #ededed;
   }
 }
 

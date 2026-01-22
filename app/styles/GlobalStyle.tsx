@@ -9,7 +9,8 @@ export const GlobalStyle = createGlobalStyle`
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    color: ${({ theme }) => theme.colors.text};
+    /* Prefer CSS variable (SSR-visible) with theme fallback to keep hydration consistent */
+    color: var(--color-text, ${({ theme }) => theme.colors.text});
     background: var(--background);
   }
 
